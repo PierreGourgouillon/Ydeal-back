@@ -70,3 +70,27 @@ exports.updateUser = async (req, res, next) => {
         });
     }
 }
+exports.deleteUser = async (req, res, next) =>{
+    try{
+        const userId = req.user.firebaseId
+        const userFound = await User.findOne({firebaseId: userId})
+
+        if (userId != userFound.firebaseId) {
+            return res.status(400).json({
+                error:  "NOT_OWNER_ERROR" ,
+                data: null
+            }) 
+        }
+
+        await User.deleteOne({ firebaseId: userId })
+        res.status(200).json({
+            error: null,
+            data: {}
+        });
+    }catch(error){
+        res.status(400).json({
+            error:  "INTERNAL_ERROR" ,
+            data: null
+        }) 
+    } 
+}
