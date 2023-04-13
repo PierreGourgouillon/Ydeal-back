@@ -4,8 +4,7 @@ const authController = require('../controllers/users');
 const { auth } = require('firebase-admin');
 
 router.post('/', authController.registerUser);
-router.post('/:userId', authController.updateUser);
-// router.get('/me', authController.me);
+router.put('/:userId', authController.updateUser);
 router.get('/', authController.getUsers);
 router.get('/:userId', authController.getUserId);
 
