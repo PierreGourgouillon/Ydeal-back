@@ -73,10 +73,17 @@ exports.deleteProduct = async (req, res, next) => {
     const filter = { _id: req.params.productId };
 
     try {
-        let productUpdated = await Product.deleteOne(filter);
+        const product = Product.findOne(filter);
+        if (product.ownerId != req.user.firebaseId) {
+            return res.status(401).json({
+                error: "NOT_OWNER_ERROR",
+                data: {}
+            });
+        }
+        await Product.deleteOne(filter);
         res.status(201).json({
             error: null,
-            data: productUpdated
+            data: {}
         });
     } catch (error) {
         res.status(400).json({
