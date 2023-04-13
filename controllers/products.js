@@ -1,15 +1,15 @@
 const Product = require('../models/productModel');
 
 exports.registerProduct = async (req, res, next) => {
-    const product = new Product({
+    let product = new Product({
         ...req.body,
         ownerId: req.user.firebaseId
     })
     try {
-        await product.save()
+        await product.save().then(savedProduct => { product = savedProduct})
         res.status(201).json({
             error: null,
-            data: {}
+            data: product
         });
     } catch (error) {
         res.status(400).json({
