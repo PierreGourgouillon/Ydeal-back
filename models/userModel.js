@@ -10,6 +10,7 @@ const userSchema = mongoose.Schema({
     description: { type: String, require: true},
     campus: { type: String, require: true },
     birthDay: { type: String, require: true },
+    favorites: { type: [String] }
 })
 
 module.exports = mongoose.model("User", userSchema);
