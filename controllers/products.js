@@ -1,4 +1,5 @@
 const Product = require('../models/productModel');
+const User = require('../models/userModel');
 
 exports.registerProduct = async (req, res, next) => {
     let product = new Product({
@@ -81,6 +82,39 @@ exports.deleteProduct = async (req, res, next) => {
             });
         }
         await Product.deleteOne(filter);
+        res.status(201).json({
+            error: null,
+            data: {}
+        });
+    } catch (error) {
+        res.status(400).json({
+            error: "INTERNAL_ERROR",
+            data: {}
+        });
+    }
+}
+
+exports.favoriteProduct = async (req, res, next) => {
+    const productFilter = { _id: req.params.productId };
+    const userFilter = { firebaseId: req.user.firebaseId };
+
+    try {
+        const product = await Product.findOne(productFilter);
+        let user = await User.findOne(userFilter);
+
+        if (product.ownerId == user.firebaseId) {
+            return res.status(401).json({
+                error: "IS_OWNER_ERROR",
+                data: {}
+            });
+        }
+
+        if (user.favorites.includes(product._id)){
+            user.favorites = user.favorites.splice(user.favorites.indexOf(product._id), 0)
+        } else user.favorites.push(product._id);
+        
+        user.save()
+
         res.status(201).json({
             error: null,
             data: {}
