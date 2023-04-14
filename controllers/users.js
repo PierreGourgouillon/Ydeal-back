@@ -1,6 +1,14 @@
 const User = require('../models/userModel');
 
 exports.registerUser = async (req, res, next) => {
+    // Verif
+    let userFounded = await User.find({firebaseId: req.user.firebaseId})
+    userFounded.push(...(await User.find({email: req.body.email})))
+    if (userFounded.length != 0) return res.status(409).json({
+        error: "USER_ALREADY_EXIST",
+        data: {}
+    });
+
     const user = new User({
         ...req.body,
         firebaseId: req.user.firebaseId
