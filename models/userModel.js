@@ -7,7 +7,6 @@ const userSchema = mongoose.Schema({
     lastName: { type: String, require: true },
     firstName: { type: String, require: true },
     pseudo: { type: String, require: true },
-    description: { type: String, require: true},
     campus: { type: String, require: true },
     birthDay: { type: String, require: true },
 })
