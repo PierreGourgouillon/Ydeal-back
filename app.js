@@ -8,11 +8,17 @@ const express = require('express'),
     app = express();
 
 connectionMongoDB()
-
-app.use(cors());
+  
+const corsOptions = {
+    origin: ['http://localhost:4200', 'https://ydeal.herokuapp.com'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+};
+  
+app.options('*', cors(corsOptions));
 app.use(bodyParser.json())
 
 app.use('/api/users', authMiddleware, usersRoutes);
-app.use('/api/products', authMiddleware, productsRoutes);
+app.use('/api/products', productsRoutes);
 
 module.exports = app;
